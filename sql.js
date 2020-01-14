@@ -61,13 +61,19 @@ const mostWinterWins = country => {
   return `SELECT year, COUNT(*) AS count FROM GoldMedal WHERE country = '${country}' AND season = 'Winter' GROUP BY year ORDER BY COUNT(*) DESC LIMIT 1;`
 };
 
+/*Best at General function */
+const bestAt = (country,thing)=>{
+  return `SELECT ${thing}, COUNT(*) AS count FROM GoldMedal WHERE country='${country}' GROUP BY ${thing} ORDER BY COUNT(*) DESC LIMIT 1;`;
+}
+
+
 /*
 Returns a SQL query string that will find the year where the given country 
 won the most medals, along with the number of medals aliased to 'count'.
 */
 
 const bestYear = country => {
-  return `SELECT year, COUNT(*) AS count FROM GoldMedal WHERE country='${country}' GROUP BY year ORDER BY COUNT(*) DESC LIMIT 1;`;
+  return bestAt(country, 'year');
 };
 
 /*
@@ -76,7 +82,7 @@ won the most medals, along with the number of medals aliased to 'count'.
 */
 
 const bestDiscipline = country => {
-  return;
+  return bestAt(country, 'discipline');
 };
 
 /*
@@ -85,7 +91,7 @@ won the most medals, along with the number of medals aliased to 'count'.
 */
 
 const bestSport = country => {
-  return;
+  return bestAt(country, 'sport');
 };
 
 /*
@@ -94,7 +100,7 @@ won the most medals, along with the number of medals aliased to 'count'.
 */
 
 const bestEvent = country => {
-  return;
+  return bestAt(country,'event');
 };
 
 /*
