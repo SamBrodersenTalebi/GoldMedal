@@ -103,12 +103,19 @@ const bestEvent = country => {
   return bestAt(country,'event');
 };
 
+/*numberGenderMedalists*/
+
+numberGenderMedalists = (country, gender)=>{
+  //DISTINCT is used not to show duplicate values
+  return `SELECT COUNT(DISTINCT name) FROM GoldMedal WHERE country = '${country}' AND gender = '${gender}';`;
+}
+
 /*
 Returns a SQL query string that will find the number of male medalists.
 */
 
 const numberMenMedalists = country => {
-  return;
+  return numberGenderMedalists(country,'Men');
 };
 
 /*
@@ -116,7 +123,7 @@ Returns a SQL query string that will find the number of female medalists.
 */
 
 const numberWomenMedalists = country => {
-  return;
+  return numberGenderMedalists(country,'Women');
 };
 
 /*
@@ -124,7 +131,7 @@ Returns a SQL query string that will find the athlete with the most medals.
 */
 
 const mostMedaledAthlete = country => {
-  return;
+  return `SELECT name FROM GoldMedal WHERE country = '${country}' GROUP BY name ORDER BY COUNT(*) DESC LIMIT 1;`;
 };
 
 /*
@@ -133,7 +140,17 @@ optionally ordered by the given field in the specified direction.
 */
 
 const orderedMedals = (country, field, sortAscending) => {
-  return;
+  //Use if statement to order.
+  let sortBy = '';
+  if(field){
+    if(sortAscending){
+      sortBy = `ORDER BY ${field} ASC`;
+    }else{
+      sortBy= `ORDER BY ${field} DESC`;
+    }
+  }
+ 
+  return `SELECT * FROM GoldMedal WHERE country = '${country}' ${sortBy};`;
 };
 
 /*
@@ -144,7 +161,17 @@ aliased as 'percent'. Optionally ordered by the given field in the specified dir
 */
 
 const orderedSports = (country, field, sortAscending) => {
-  return;
+  let sortBy = '';
+  if(field){
+    if(sortAscending){
+      sortBy = `ORDER BY ${field} ASC`;
+    }else{
+      sortBy= `ORDER BY ${field} DESC`;
+    }
+  }
+
+  return `SELECT sport, COUNT(*) AS count, (COUNT(sport) * 100 / (select COUNT(*) FROM GoldMedal WHERE country = '${country}')) AS percent FROM GoldMedal WHERE country = '${country}' GROUP BY sport ${sortBy};`;
+
 };
 
 module.exports = {
